@@ -37,7 +37,7 @@ for path in REMOVE_PATHS:
             os.unlink(path)
 
 
-# initialize github repository
+# initialize GitHub repository
 
 def handle_error(err_out):
     if err_out:
