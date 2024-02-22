@@ -1,0 +1,2 @@
+      - name: Unit Test
+        run: docker run $APP_IMAGE python -m unittest discover

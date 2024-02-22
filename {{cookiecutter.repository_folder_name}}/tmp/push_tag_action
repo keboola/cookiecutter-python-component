@@ -1,0 +1,12 @@
+      - name: Test tag name
+        run: echo "TEST_TAG=${GITHUB_TAG//\//-}" >> $GITHUB_ENV
+      - name: Push test image
+        uses: odinuv/action-push-to-ecr@master
+        with:
+          vendor: ${{ secrets.KBC_DEVELOPERPORTAL_VENDOR }}
+          app_id: ${{ secrets.KBC_DEVELOPERPORTAL_APP }}
+          username: ${{ secrets.KBC_DEVELOPERPORTAL_USERNAME }}
+          password: ${{ secrets.KBC_DEVELOPERPORTAL_PASSWORD }}
+          tag: ${{ env.TEST_TAG }}
+          push_latest: true
+          source_image: keboola-component

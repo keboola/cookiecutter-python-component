@@ -1,0 +1,2 @@
+      - name: Run Flake Lint
+        run: docker run $APP_IMAGE flake8 /code/ --config=/code/flake8.cfg
