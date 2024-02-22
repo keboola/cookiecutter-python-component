@@ -8,8 +8,6 @@
   "repository_folder_name": "{{ cookiecutter.component_name.lower().replace(' ', '_').replace('-', '_') }}",
   "component_short_description": "{{ cookiecutter.component_name }} short description",
   "component_long_description": "{{ cookiecutter.component_name }} long description",
-  "ci_use_flake8_checks": "y",
-  "ci_push_test_tag_in_branch": "n",
   "_copy_without_render": [
     ".github/workflows/*",
     "tmp/*",
