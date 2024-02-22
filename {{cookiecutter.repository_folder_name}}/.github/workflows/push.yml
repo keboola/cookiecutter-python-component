@@ -13,7 +13,7 @@ env:
   # KBC_DEVELOPERPORTAL_PASSWORD: ${{ secrets.KBC_DEVELOPERPORTAL_PASSWORD }}
 
   # Test KBC project: https://connection.keboola.com/admin/projects/5415
-  KBC_TEST_PROJECT_CONFIGS: "1089160256" # space separated list of config ids (optional)
+  KBC_TEST_PROJECT_CONFIGS: "" # space separated list of config ids (optional)
 
 jobs:
   build:
