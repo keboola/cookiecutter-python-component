@@ -6,13 +6,13 @@ from pathlib import Path
 
 
 def modify_portal_properties(repo_url):
-    with open(Path('component_config/sourceCodeUrl.md'), 'r') as inp:
+    with open(Path('component_config/sourceCodeUrl.md'), 'w') as inp:
         inp.write(repo_url)
 
-    with open(Path('component_config/documentationUrl.md'), 'r') as inp:
+    with open(Path('component_config/documentationUrl.md'), 'w') as inp:
         inp.write(repo_url+"/blob/master/README.md")
 
-    with open(Path('component_config/licenseUrl.md'), 'r') as inp:
+    with open(Path('component_config/licenseUrl.md'), 'w') as inp:
         inp.write(repo_url+"/blob/master/LICENSE.md")
 
 
