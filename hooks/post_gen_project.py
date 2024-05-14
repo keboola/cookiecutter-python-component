@@ -36,16 +36,12 @@ for path in REMOVE_PATHS:
         else:
             os.unlink(path)
 
-
-# initialize GitHub repository
-
 def handle_error(err_out):
     if err_out:
         print(f"Command failed with error: {err_out}")
         exit(1)
 
-
-stderr = ''
+# initialize GitHub repository
 print("Initializing github repository")
 subprocess.run(["git", "init"])
 
