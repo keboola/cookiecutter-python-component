@@ -13,7 +13,7 @@ Python > 3
 ## Usage
 
 
-1. Run `cookiecutter gh:keboola/cookiecutter-python-component.git`
+1. Run `cookiecutter gh:keboola/cookiecutter-python-component`
 2. Fill in requested parameters:
     - `template_variant` - Where is your empty repository (Github, Bitbucket)
     - `repository_url` - (OPT) URL of your repository, if filled in the template git repository is initialised and remote set to your repository.
