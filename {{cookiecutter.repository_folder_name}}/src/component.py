@@ -3,20 +3,13 @@ Template Component main class.
 
 """
 import csv
-import logging
 from datetime import datetime
+import logging
 
 from keboola.component.base import ComponentBase
 from keboola.component.exceptions import UserException
 
-# configuration variables
-KEY_API_TOKEN = '#api_token'
-KEY_PRINT_HELLO = 'print_hello'
-
-# list of mandatory parameters => if some is missing,
-# component will fail with readable message on initialization.
-REQUIRED_PARAMETERS = [KEY_PRINT_HELLO]
-REQUIRED_IMAGE_PARS = []
+from configuration import Configuration
 
 
 class Component(ComponentBase):
@@ -40,11 +33,10 @@ class Component(ComponentBase):
 
         # ####### EXAMPLE TO REMOVE
         # check for missing configuration parameters
-        self.validate_configuration_parameters(REQUIRED_PARAMETERS)
-        self.validate_image_parameters(REQUIRED_IMAGE_PARS)
-        params = self.configuration.parameters
-        # Access parameters in data/config.json
-        if params.get(KEY_PRINT_HELLO):
+        params = Configuration(**self.configuration.parameters)
+
+        # Access parameters in configuration
+        if params.print_hello:
             logging.info("Hello World")
 
         # get input table definitions
@@ -57,9 +49,9 @@ class Component(ComponentBase):
 
         # get last state data/in/state.json from previous run
         previous_state = self.get_state_file()
-        logging.info(previous_state.get('some_state_parameter'))
+        logging.info(previous_state.get('data_delta'))
 
-        # Create output table (Tabledefinition - just metadata)
+        # Create output table (Table definition - just metadata)
         table = self.create_out_table_definition('output.csv', incremental=True, primary_key=['timestamp'])
 
         # get file path of the table (data/out/tables/Features.csv)
@@ -83,7 +75,7 @@ class Component(ComponentBase):
                 in_row['timestamp'] = datetime.now().isoformat()
                 writer.writerow(in_row)
 
-        # Save table manifest (output.csv.manifest) from the tabledefinition
+        # Save table manifest (output.csv.manifest) from the Table definition
         self.write_manifest(table)
 
         # Write new state - will be available next run
