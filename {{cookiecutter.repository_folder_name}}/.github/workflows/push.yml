@@ -3,9 +3,9 @@ on: [ push ]
 concurrency: ci-${{ github.ref }} # to avoid tag collisions in the ECR
 env:
   # repository variables:
+  KBC_DEVELOPERPORTAL_APP_ID: "keboola.ex-service-name"
+  KBC_DEVELOPERPORTAL_VENDOR: "keboola"
   DOCKERHUB_USER: ${{ vars.DOCKERHUB_USER }}
-  KBC_DEVELOPERPORTAL_APP: ${{ vars.KBC_DEVELOPERPORTAL_APP }}
-  KBC_DEVELOPERPORTAL_VENDOR: ${{ vars.KBC_DEVELOPERPORTAL_VENDOR }}
   KBC_DEVELOPERPORTAL_USERNAME: ${{ vars.KBC_DEVELOPERPORTAL_USERNAME }}
 
   # repository secrets:
@@ -92,14 +92,14 @@ jobs:
         with:
           context: .
           file: ./Dockerfile
-          tags: ${{ vars.KBC_DEVELOPERPORTAL_APP }}:latest
-          outputs: type=docker,dest=/tmp/${{ vars.KBC_DEVELOPERPORTAL_APP }}.tar
+          tags: ${{ env.KBC_DEVELOPERPORTAL_APP_ID }}:latest
+          outputs: type=docker,dest=/tmp/${{ env.KBC_DEVELOPERPORTAL_APP_ID }}.tar
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ vars.KBC_DEVELOPERPORTAL_APP }}
-          path: /tmp/${{ vars.KBC_DEVELOPERPORTAL_APP }}.tar
+          name: ${{ env.KBC_DEVELOPERPORTAL_APP_ID }}
+          path: /tmp/${{ env.KBC_DEVELOPERPORTAL_APP_ID }}.tar
 
   tests:
     name: Run Tests
@@ -114,16 +114,16 @@ jobs:
       - name: Download artifact
         uses: actions/download-artifact@v4
         with:
-          name: ${{ vars.KBC_DEVELOPERPORTAL_APP }}
+          name: ${{ env.KBC_DEVELOPERPORTAL_APP_ID }}
           path: /tmp
 
       - name: Load Image & Run Tests
         run: |
-          docker load --input /tmp/${{ vars.KBC_DEVELOPERPORTAL_APP }}.tar
+          docker load --input /tmp/${{ env.KBC_DEVELOPERPORTAL_APP_ID }}.tar
           docker image ls -a
-          docker run ${{ vars.KBC_DEVELOPERPORTAL_APP }}:latest flake8 . --config=flake8.cfg
+          docker run ${{ env.KBC_DEVELOPERPORTAL_APP_ID }}:latest flake8 . --config=flake8.cfg
           echo "Running unit-tests..."
-          docker run ${{ vars.KBC_DEVELOPERPORTAL_APP }}:latest python -m unittest discover
+          docker run ${{ env.KBC_DEVELOPERPORTAL_APP_ID }}:latest python -m unittest discover
 
   tests-kbc:
     name: Run KBC Tests
@@ -140,7 +140,7 @@ jobs:
         uses: keboola/action-run-configs-parallel@master
         with:
           token: ${{ secrets.KBC_STORAGE_TOKEN }}
-          componentId: ${{ env.KBC_DEVELOPERPORTAL_APP }}
+          componentId: ${{ env.KBC_DEVELOPERPORTAL_APP_ID }}
           tag: ${{ needs.push_event_info.outputs.app_image_tag }}
           configs: ${{ env.KBC_TEST_PROJECT_CONFIGS }}
 
@@ -160,12 +160,12 @@ jobs:
       - name: Download artifact
         uses: actions/download-artifact@v4
         with:
-          name: ${{ vars.KBC_DEVELOPERPORTAL_APP }}
+          name: ${{ env.KBC_DEVELOPERPORTAL_APP_ID }}
           path: /tmp
 
       - name: Load Image & Run Tests
         run: |
-          docker load --input /tmp/${{ vars.KBC_DEVELOPERPORTAL_APP }}.tar
+          docker load --input /tmp/${{ env.KBC_DEVELOPERPORTAL_APP_ID }}.tar
           docker image ls -a
 
       - name: Docker login
@@ -176,12 +176,12 @@ jobs:
         uses: keboola/action-push-to-ecr@master
         with:
           vendor: ${{ env.KBC_DEVELOPERPORTAL_VENDOR }}
-          app_id: ${{ env.KBC_DEVELOPERPORTAL_APP }}
+          app_id: ${{ env.KBC_DEVELOPERPORTAL_APP_ID }}
           username: ${{ env.KBC_DEVELOPERPORTAL_USERNAME }}
           password: ${{ secrets.KBC_DEVELOPERPORTAL_PASSWORD }}
           tag: ${{ needs.push_event_info.outputs.app_image_tag }}
           push_latest: ${{ needs.push_event_info.outputs.is_deploy_ready }}
-          source_image: ${{ vars.KBC_DEVELOPERPORTAL_APP }}
+          source_image: ${{ env.KBC_DEVELOPERPORTAL_APP_ID }}
 
   deploy:
     name: Deploy to KBC
@@ -198,7 +198,7 @@ jobs:
         uses: keboola/action-set-tag-developer-portal@master
         with:
           vendor: ${{ env.KBC_DEVELOPERPORTAL_VENDOR }}
-          app_id: ${{ env.KBC_DEVELOPERPORTAL_APP }}
+          app_id: ${{ env.KBC_DEVELOPERPORTAL_APP_ID }}
           username: ${{ env.KBC_DEVELOPERPORTAL_USERNAME }}
           password: ${{ secrets.KBC_DEVELOPERPORTAL_PASSWORD }}
           tag: ${{ needs.push_event_info.outputs.app_image_tag }}
