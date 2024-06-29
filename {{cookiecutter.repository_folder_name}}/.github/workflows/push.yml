@@ -128,7 +128,7 @@ jobs:
   tests-kbc:
     name: Run KBC Tests
     env:
-      KBC_TEST_PROJECT_CONFIGS: ${{ vars.KBC_TEST_PROJECT_CONFIGS }}
+      KBC_TEST_PROJECT_CONFIGS: ${{ env.KBC_TEST_PROJECT_CONFIGS }}
       KBC_STORAGE_TOKEN: ${{ secrets.KBC_STORAGE_TOKEN }}
     needs:
       - push_event_info
