@@ -49,7 +49,7 @@ class Component(ComponentBase):
 
         # get last state data/in/state.json from previous run
         previous_state = self.get_state_file()
-        logging.info(previous_state.get('data_delta'))
+        logging.info(previous_state.get('some_parameter'))
 
         # Create output table (Table definition - just metadata)
         table = self.create_out_table_definition('output.csv', incremental=True, primary_key=['timestamp'])
