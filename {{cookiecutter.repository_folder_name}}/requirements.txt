@@ -1,5 +1,6 @@
 keboola.component
 keboola.utils
 keboola.http-client
-mock
 freezegun
+mock
+pydantic
