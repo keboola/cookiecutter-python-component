@@ -5,7 +5,7 @@ env:
   # repository variables:
   KBC_DEVELOPERPORTAL_APP: "keboola.ex-service-name" # replace with your component id
   KBC_DEVELOPERPORTAL_VENDOR: "keboola" # replace with your vendor
-  DOCKERHUB_USER: ${{ vars.DOCKERHUB_USER }}
+  DOCKERHUB_USER: ${{ secrets.DOCKERHUB_USER }}
   KBC_DEVELOPERPORTAL_USERNAME: ${{ vars.KBC_DEVELOPERPORTAL_USERNAME }}
 
   # repository secrets:
@@ -127,16 +127,18 @@ jobs:
 
   tests-kbc:
     name: Run KBC Tests
-    env:
-      KBC_TEST_PROJECT_CONFIGS: ${{ env.KBC_TEST_PROJECT_CONFIGS }}
-      KBC_STORAGE_TOKEN: ${{ secrets.KBC_STORAGE_TOKEN }}
     needs:
       - push_event_info
       - build
     runs-on: ubuntu-latest
     steps:
+      - name: Set up environment variables
+        run: |
+          echo "KBC_TEST_PROJECT_CONFIGS=${KBC_TEST_PROJECT_CONFIGS}" >> $GITHUB_ENV
+          echo "KBC_STORAGE_TOKEN=${{ secrets.KBC_STORAGE_TOKEN }}" >> $GITHUB_ENV
+
       - name: Run KBC test jobs
-        if: ${{ env.KBC_TEST_PROJECT_CONFIGS != '' }} && ${{ env.KBC_STORAGE_TOKEN != '' }}
+        if: env.KBC_TEST_PROJECT_CONFIGS != '' && env.KBC_STORAGE_TOKEN != ''
         uses: keboola/action-run-configs-parallel@master
         with:
           token: ${{ secrets.KBC_STORAGE_TOKEN }}
