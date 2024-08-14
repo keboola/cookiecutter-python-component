@@ -8,5 +8,5 @@ __pycache__/
 /example/.pydevproject
 
 # kbc datafolder
-/data
+#/data
 /venv
