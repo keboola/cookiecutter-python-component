@@ -4,3 +4,4 @@ keboola.http-client
 freezegun
 mock
 pydantic
+pre-commit

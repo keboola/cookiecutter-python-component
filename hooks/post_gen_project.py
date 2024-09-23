@@ -1,4 +1,5 @@
 import os
+import platform
 import shutil
 import subprocess
 
@@ -15,11 +16,39 @@ def modify_portal_properties(repo_url):
     with open(Path('component_config/licenseUrl.md'), 'w') as inp:
         inp.write(repo_url+"/blob/master/LICENSE.md")
 
+    
+def check_virtualenv_module() -> None:
+    if subprocess.run(["python", "-m", "virtualenv", "--version"]).returncode != 0:
+        print('ERROR: virtualenv module is not installed! Installing..."')
+        subprocess.run(["pip", "install", "virtualenv"])
+        check_virtualenv_module()
+    else:
+        print('Module virtualenv is already installed. Proceeding...')
 
-platform = '{{ cookiecutter.template_variant }}'
+
+def identify_os() -> str:
+    return platform.system().lower()
+
+
+def create_venv_and_install_libraries(os_name: str) -> None:
+    print('Creating virtual environment...')
+    subprocess.run(["python", "-m", "virtualenv", "venv"])
+    print('Virtual environment created. Installing libraries...')
+
+    if os_name.startswith('win'):
+        subprocess.run(["venv\\Scripts\\pip", "install", "-r", "requirements.txt"])
+
+    else:
+        subprocess.run(["venv/bin/pip", "install", "-r", "requirements.txt"])
+
+    print('Libraries installed. Proceeding...')
+
+
+# remove redundant files and directories 
+template_variant = '{{ cookiecutter.template_variant }}'
 repo_url = '{{ cookiecutter.repository_url }}'
 
-if platform == 'GitHub':
+if template_variant == 'GitHub':
     modify_portal_properties(repo_url=repo_url)
 
 REMOVE_PATHS = [
@@ -58,3 +87,12 @@ if not repo_url:
         '\n WARNING: No repository_url was set. To set the remote to your repository please use following command:\n '
         'git remote add '
         'origin PATH_TO_YOUR_REPOSITORY')
+
+
+# virtualenv setup process
+os_name = identify_os()
+check_virtualenv_module()
+create_venv_and_install_libraries(os_name)
+
+project_name = '{{ cookiecutter.repository_folder_name }}'
+print(f"\nProject \"{project_name}\" initialized successfully!")
