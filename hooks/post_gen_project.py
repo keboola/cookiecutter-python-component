@@ -1,7 +1,6 @@
 import os
 import shutil
 import subprocess
-import sys
 
 from pathlib import Path
 
@@ -19,26 +18,26 @@ def modify_portal_properties(repo_url):
     
 def check_virtualenv_module() -> None:
     if subprocess.run(["python", "-m", "virtualenv", "--version"]).returncode != 0:
-        print('ERROR: virtualenv module is not installed! Installing..."')
-        subprocess.run(["pip", "install", "virtualenv"])
+        print('\n[COOKIECUTTER][ERROR]: Virtualenv module is not installed! Installing...')
+        subprocess.run(["python", "-m", "pip", "install", "virtualenv"])
         check_virtualenv_module()
     else:
-        print('Module virtualenv is already installed. Proceeding...')
+        print('\n[COOKIECUTTER][INFO]: Module virtualenv is already installed. Proceeding...')
 
 
 def create_venv_and_install_libraries() -> None:
-    print('Creating virtual environment...')
+    print('\n[COOKIECUTTER][INFO]: Creating virtual environment...')
     subprocess.run(["python", "-m", "virtualenv", "venv"])
-    print('Virtual environment created.')
+    print('\n[COOKIECUTTER][INFO]: Virtual environment created.')
 
     if os.name.lower().startswith('nt'):
         pip_exec = os.path.join('venv', 'Scripts', 'pip')
-        print('Installing libraries...')
+        print('\n[COOKIECUTTER][INFO]: Installing libraries...')
         subprocess.run([pip_exec, "install", "-r", "requirements.txt"])
     else:
         subprocess.run(["bash", "venv_setup.sh"])
 
-    print('Libraries installed. Proceeding...')
+    print('\n[COOKIECUTTER][INFO]: Libraries installed. Proceeding...')
 
 
 # remove redundant files and directories 
@@ -64,31 +63,34 @@ for path in REMOVE_PATHS:
 
 def handle_error(err_out):
     if err_out:
-        print(f"Command failed with error: {err_out}")
+        print(f"\n[COOKIECUTTER][ERROR]: Command failed with error: {err_out}")
         exit(1)
 
 # initialize GitHub repository
-print("Initializing github repository")
+print("\n[COOKIECUTTER][INFO]: Initializing github repository")
 subprocess.run(["git", "init"])
 
 if repo_url:
-    print(f'\nSetting up remote to {repo_url}')
+    print(f'\n[COOKIECUTTER][INFO]: Setting up remote to {repo_url}')
 subprocess.run(["git", "remote", "add", "origin", repo_url])
 
-print("\nAdding first commit")
+print("\n[COOKIECUTTER][INFO]: Adding first commit")
 subprocess.run(["git", "add", "."])
 subprocess.run(["git", "commit", "-m", '"Initial commit"'])
 
 if not repo_url:
     print(
-        '\n WARNING: No repository_url was set. To set the remote to your repository please use following command:\n '
+        '\n [COOKIECUTTER][WARNING]: No repository_url was set. To set the remote to your repository please use following command:\n '
         'git remote add '
         'origin PATH_TO_YOUR_REPOSITORY')
 
 
 # virtualenv setup process
+print("\n[COOKIECUTTER][INFO]: Virtual environment setup process starting...")
 check_virtualenv_module()
+print("\n[COOKIECUTTER][INFO]: Virtual environment module was checked. Proceeding...")
 create_venv_and_install_libraries()
+print("\n[COOKIECUTTER][INFO]: Virtual environment setup process completed.")
 
 project_name = '{{ cookiecutter.repository_folder_name }}'
-print(f"\nProject \"{project_name}\" initialized successfully!")
+print(f"\n[COOKIECUTTER][INFO]: Project \"{project_name}\" initialized successfully!")
