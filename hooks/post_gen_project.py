@@ -1,10 +1,11 @@
 import os
-import platform
 import shutil
 import subprocess
+import sys
 
 from pathlib import Path
 
+python_exec = sys.executable
 
 def modify_portal_properties(repo_url):
     with open(Path('component_config/sourceCodeUrl.md'), 'w') as inp:
@@ -18,7 +19,7 @@ def modify_portal_properties(repo_url):
 
     
 def check_virtualenv_module() -> None:
-    if subprocess.run(["python", "-m", "virtualenv", "--version"]).returncode != 0:
+    if subprocess.run([python_exec, "-m", "virtualenv", "--version"]).returncode != 0:
         print('ERROR: virtualenv module is not installed! Installing..."')
         subprocess.run(["pip", "install", "virtualenv"])
         check_virtualenv_module()
@@ -26,29 +27,28 @@ def check_virtualenv_module() -> None:
         print('Module virtualenv is already installed. Proceeding...')
 
 
-def identify_os() -> str:
-    return platform.system().lower()
-
-
-def create_venv_and_install_libraries(os_name: str) -> None:
+def create_venv_and_install_libraries() -> None:
     print('Creating virtual environment...')
-    subprocess.run(["python", "-m", "virtualenv", "venv"])
-    print('Virtual environment created. Installing libraries...')
+    subprocess.run([python_exec, "-m", "virtualenv", "venv"])
+    print('Virtual environment created.')
 
-    if os_name.startswith('win'):
-        subprocess.run(["venv\\Scripts\\pip", "install", "-r", "requirements.txt"])
-
+    if os.name.lower().startswith('nt'):
+        pip_exec = os.path.join('venv', 'Scripts', 'pip')
     else:
-        subprocess.run(["venv/bin/pip", "install", "-r", "requirements.txt"])
+        venv_path = os.path.join(os.getcwd(), "venv")
+        pip_exec = os.path.join(venv_path, 'bin', 'pip')
 
+    print('Installing libraries...')
+    subprocess.run([pip_exec, "install", "-r", "requirements.txt"])
     print('Libraries installed. Proceeding...')
 
 
+
 # remove redundant files and directories 
-template_variant = '{{ cookiecutter.template_variant }}'
+platform = '{{ cookiecutter.template_variant }}'
 repo_url = '{{ cookiecutter.repository_url }}'
 
-if template_variant == 'GitHub':
+if platform == 'GitHub':
     modify_portal_properties(repo_url=repo_url)
 
 REMOVE_PATHS = [
@@ -90,9 +90,8 @@ if not repo_url:
 
 
 # virtualenv setup process
-os_name = identify_os()
 check_virtualenv_module()
-create_venv_and_install_libraries(os_name)
+create_venv_and_install_libraries()
 
 project_name = '{{ cookiecutter.repository_folder_name }}'
 print(f"\nProject \"{project_name}\" initialized successfully!")
