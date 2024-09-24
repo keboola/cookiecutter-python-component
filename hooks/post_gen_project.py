@@ -5,7 +5,6 @@ import sys
 
 from pathlib import Path
 
-python_exec = sys.executable
 
 def modify_portal_properties(repo_url):
     with open(Path('component_config/sourceCodeUrl.md'), 'w') as inp:
@@ -19,7 +18,7 @@ def modify_portal_properties(repo_url):
 
     
 def check_virtualenv_module() -> None:
-    if subprocess.run([python_exec, "-m", "virtualenv", "--version"]).returncode != 0:
+    if subprocess.run(["python", "-m", "virtualenv", "--version"]).returncode != 0:
         print('ERROR: virtualenv module is not installed! Installing..."')
         subprocess.run(["pip", "install", "virtualenv"])
         check_virtualenv_module()
@@ -29,7 +28,7 @@ def check_virtualenv_module() -> None:
 
 def create_venv_and_install_libraries() -> None:
     print('Creating virtual environment...')
-    subprocess.run([python_exec, "-m", "virtualenv", "venv"])
+    subprocess.run(["python", "-m", "virtualenv", "venv"])
     print('Virtual environment created.')
 
     if os.name.lower().startswith('nt'):
