@@ -34,14 +34,12 @@ def create_venv_and_install_libraries() -> None:
 
     if os.name.lower().startswith('nt'):
         pip_exec = os.path.join('venv', 'Scripts', 'pip')
+        print('Installing libraries...')
+        subprocess.run([pip_exec, "install", "-r", "requirements.txt"])
     else:
-        venv_path = os.path.join(os.getcwd(), "venv")
-        pip_exec = os.path.join(venv_path, 'bin', 'pip')
+        subprocess.run(["bash", "venv_setup.sh"])
 
-    print('Installing libraries...')
-    subprocess.run([pip_exec, "install", "-r", "requirements.txt"])
     print('Libraries installed. Proceeding...')
-
 
 
 # remove redundant files and directories 
