@@ -32,11 +32,12 @@ def create_venv_and_install_libraries() -> None:
 
     if os.name.lower().startswith('nt'):
         pip_exec = os.path.join('venv', 'Scripts', 'pip')
-        print('\n[COOKIECUTTER][INFO]: Installing libraries...')
-        subprocess.run([pip_exec, "install", "-r", "requirements.txt"])
+        
     else:
-        subprocess.run(["bash", "venv_setup.sh"])
+        pip_exec = os.path.join('venv', 'bin', 'pip')
 
+    print('\n[COOKIECUTTER][INFO]: Installing libraries...')
+    subprocess.run([pip_exec, "install", "-r", "requirements.txt"])
     print('\n[COOKIECUTTER][INFO]: Libraries installed. Proceeding...')
 
 
