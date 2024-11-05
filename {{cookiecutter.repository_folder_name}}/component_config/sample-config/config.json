@@ -19,7 +19,8 @@
     }
   },
   "parameters": {
-    "#api_token": "demo",
+    "#api_token": "DEMO",
+    "print_hello": true,
     "period_from": "yesterday",
     "endpoints": [
       "deals",
