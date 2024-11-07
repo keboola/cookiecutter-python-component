@@ -15,7 +15,18 @@ def modify_portal_properties(repo_url):
     with open(Path('component_config/licenseUrl.md'), 'w') as inp:
         inp.write(repo_url+"/blob/master/LICENSE.md")
 
-    
+
+def check_precommit_module() -> None:
+    if subprocess.run(["python", "-m", "pip", "show", "pre-commit"]).returncode != 0:
+        print('\n[COOKIECUTTER][ERROR]: Pre-commit module is not installed! Installing..')
+        subprocess.run(["python", "-m", "pip", "install", "pre-commit"])
+    else:
+        print('\n[COOKIECUTTER][INFO]: Module pre-commit is already installed. Proceeding...')
+
+    print('\n[COOKIECUTTER][INFO]: Installing pre-commit hooks...')
+    subprocess.run(["pre-commit", "install"])
+
+
 def check_virtualenv_module() -> None:
     if subprocess.run(["python", "-m", "virtualenv", "--version"]).returncode != 0:
         print('\n[COOKIECUTTER][ERROR]: Virtualenv module is not installed! Installing...')
@@ -87,6 +98,8 @@ if not repo_url:
 
 
 # virtualenv setup process
+print("\n[COOKIECUTTER][INFO]: Pre-commit module checking...")
+check_precommit_module()
 print("\n[COOKIECUTTER][INFO]: Virtual environment setup process starting...")
 check_virtualenv_module()
 print("\n[COOKIECUTTER][INFO]: Virtual environment module was checked. Proceeding...")
