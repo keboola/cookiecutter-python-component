@@ -22,7 +22,7 @@ Features
 |-------------------------|-----------------------------------------------|
 | Generic UI Form         | Dynamic UI form for easy configuration.       |
 | Row-Based Configuration | Allows structuring the configuration in rows. |
-| oAuth                   | OAuth authentication enabled.                 |
+| OAuth                   | OAuth authentication enabled.                 |
 | Incremental Loading     | Fetch data in new increments.                 |
 | Backfill Mode           | Supports seamless backfill setup.             |
 | Date Range Filter       | Specify the date range for data retrieval.    |
