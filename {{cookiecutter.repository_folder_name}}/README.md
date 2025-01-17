@@ -3,55 +3,56 @@
 
 Description
 
-**Table of contents:**
+**Table of Contents:**
 
 [TOC]
 
-Functionality notes
+Functionality Notes
 ===================
 
 Prerequisites
 =============
 
-Get the API token, register application, etc.
+Ensure you have the necessary API token, register the application, etc.
 
 Features
 ========
 
-| **Feature**             | **Note**                                      |
+| **Feature**             | **Description**                               |
 |-------------------------|-----------------------------------------------|
-| Generic UI form         | Dynamic UI form                               |
-| Row Based configuration | Allows structuring the configuration in rows. |
-| oAuth                   | oAuth authentication enabled                  |
-| Incremental loading     | Allows fetching data in new increments.       |
-| Backfill mode           | Support for seamless backfill setup.          |
-| Date range filter       | Specify date range.                           |
+| Generic UI Form         | Dynamic UI form for easy configuration.       |
+| Row-Based Configuration | Allows structuring the configuration in rows. |
+| oAuth                   | OAuth authentication enabled.                 |
+| Incremental Loading     | Fetch data in new increments.                 |
+| Backfill Mode           | Supports seamless backfill setup.             |
+| Date Range Filter       | Specify the date range for data retrieval.    |
 
-Supported endpoints
+Supported Endpoints
 ===================
 
-If you need more endpoints, please submit your request to
-[ideas.keboola.com](https://ideas.keboola.com/)
+If you need additional endpoints, please submit your request to
+[ideas.keboola.com](https://ideas.keboola.com/).
 
 Configuration
 =============
 
 Param 1
 -------
+Details about parameter 1.
 
 Param 2
 -------
+Details about parameter 2.
 
 Output
 ======
 
-List of tables, foreign keys, schema.
+Provides a list of tables, foreign keys, and schema.
 
 Development
 -----------
 
-If required, change local data folder (the `CUSTOM_FOLDER` placeholder) path to
-your custom path in the `docker-compose.yml` file:
+To customize the local data folder path, replace the `CUSTOM_FOLDER` placeholder with your desired path in the `docker-compose.yml` file:
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     volumes:
@@ -59,8 +60,8 @@ your custom path in the `docker-compose.yml` file:
       - ./CUSTOM_FOLDER:/data
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Clone this repository, init the workspace and run the component with following
-command:
+Clone this repository, initialize the workspace, and run the component using the following
+commands:
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 git clone {{ cookiecutter.repository_url }} {{ cookiecutter. repository_folder_name }}
@@ -69,7 +70,7 @@ docker-compose build
 docker-compose run --rm dev
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Run the test suite and lint check using this command:
+Run the test suite and perform lint checks using this command:
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 docker-compose run --rm test
@@ -78,6 +79,6 @@ docker-compose run --rm test
 Integration
 ===========
 
-For information about deployment and integration with KBC, please refer to the
-[deployment section of developers
-documentation](https://developers.keboola.com/extend/component/deployment/)
+For details about deployment and integration with Keboola, refer to the
+[deployment section of the developer
+documentation](https://developers.keboola.com/extend/component/deployment/).
