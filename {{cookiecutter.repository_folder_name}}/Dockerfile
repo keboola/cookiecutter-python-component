@@ -11,11 +11,10 @@ COPY pyproject.toml .
 
 RUN uv pip install --system .
 
-COPY /src /src/
-COPY /tests /tests/
-COPY /scripts /scripts/
+COPY src/ .
+COPY tests/ .
+COPY scripts/ .
 COPY flake8.cfg .
 COPY deploy.sh .
 
-# CMD ["python", "-u", "/code/src/component.py"]
-CMD ["/bin/bash"]
+CMD ["python", "-u", "/code/src/component.py"]
