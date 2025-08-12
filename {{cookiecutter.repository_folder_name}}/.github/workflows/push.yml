@@ -3,8 +3,8 @@ on: [ push ]
 concurrency: ci-${{ github.ref }} # to avoid tag collisions in the ECR
 env:
   # repository variables:
-  KBC_DEVELOPERPORTAL_APP: "keboola.ex-service-name" # replace with your component id
-  KBC_DEVELOPERPORTAL_VENDOR: "keboola" # replace with your vendor
+  KBC_DEVELOPERPORTAL_APP: COOKIECUTTER_DEV_PORTAL_COMPONENT_ID
+  KBC_DEVELOPERPORTAL_VENDOR: COOKIECUTTER_DEV_PORTAL_VENDOR_NAME
   DOCKERHUB_USER: ${{ secrets.DOCKERHUB_USER }}
   KBC_DEVELOPERPORTAL_USERNAME: ${{ vars.KBC_DEVELOPERPORTAL_USERNAME }}
 
@@ -40,7 +40,7 @@ jobs:
             echo "branch_name=$branch_name" | tee -a $GITHUB_OUTPUT
           else
             raw=$(git branch -r --contains ${{ github.ref }})
-            branch="$(echo ${raw//origin\//} | tr -d '\n')"
+            branch="$(echo ${raw/*origin\//} | tr -d '\n')"
             echo "branch_name=$branch" | tee -a $GITHUB_OUTPUT
           fi
 
