@@ -59,7 +59,7 @@ def handle_error(err_out):
 
 # initialize GitHub repository
 print("Initializing github repository")
-subprocess.run(["git", "init"])
+subprocess.run(["git", "init", "-b", "main"])
 
 if repo_url:
     print(f"\nSetting up remote to {repo_url}")
@@ -67,11 +67,10 @@ subprocess.run(["git", "remote", "add", "origin", repo_url])
 
 print("\nAdding first commit")
 subprocess.run(["git", "add", "."])
-subprocess.run(["git", "commit", "-m", "Initial commit"])
+subprocess.run(["git", "commit", "-m", "Initial cookiecutter-template-based commit"])
 
 if not repo_url:
     print(
-        "\n WARNING: No repository_url was set. To set the remote to your repository please use following command:\n "
-        "git remote add "
-        "origin PATH_TO_YOUR_REPOSITORY"
+        "\nWARNING: No repository_url was set. To set the remote to your repository later, run the following command:\n"
+        "git remote add origin PATH_TO_YOUR_REPOSITORY"
     )
