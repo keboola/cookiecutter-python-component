@@ -1,12 +1,12 @@
-# Byte-compiled / optimized / DLL files
 __pycache__/
-*.py[cod]
-.idea
-.vscode
 .DS_Store
-/example/.project
-/example/.pydevproject
+.idea
+.ruff_cache
+.venv
+.vscode
+*.py[cod]
+*.egg-info
+venv
 
 # kbc datafolder
-/data
-/venv
+data
