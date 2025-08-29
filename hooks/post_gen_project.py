@@ -11,12 +11,11 @@ def modify_portal_properties(repo_url):
         lines = f.readlines()
         f.seek(0)
         for line in lines:
-            if KDP_COMPID_PLACEHOLDER in line:
-                output = line.replace(KDP_COMPID_PLACEHOLDER, "{{ cookiecutter.dev_portal_component_id }}")
-            elif KDP_VENDOR_PLACEHOLDER in line:
-                output = line.replace(KDP_VENDOR_PLACEHOLDER, "{{ cookiecutter.dev_portal_vendor_name }}")
-            else:
-                output = line
+            output = line
+            if KDP_COMPID_PLACEHOLDER in output:
+                output = output.replace(KDP_COMPID_PLACEHOLDER, "{{ cookiecutter.dev_portal_component_id }}")
+            if KDP_VENDOR_PLACEHOLDER in output:
+                output = output.replace(KDP_VENDOR_PLACEHOLDER, "{{ cookiecutter.dev_portal_vendor_name }}")
             f.write(output)
         f.truncate()  # truncate the file to remove any leftover content
 
