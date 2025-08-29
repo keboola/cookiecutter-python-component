@@ -8,13 +8,15 @@ COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 WORKDIR /code/
 
 COPY pyproject.toml .
+COPY uv.lock .
 
-RUN uv pip install --system .
+ENV UV_PROJECT_ENVIRONMENT="/usr/local/"
+RUN uv sync --all-groups --frozen
 
-COPY src/ .
-COPY tests/ .
-COPY scripts/ .
+COPY src/ src
+COPY tests/ tests
+COPY scripts/ scripts
 COPY flake8.cfg .
 COPY deploy.sh .
 
-CMD ["python", "-u", "/code/src/component.py"]
+CMD ["python", "-u", "src/component.py"]
