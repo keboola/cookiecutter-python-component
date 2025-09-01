@@ -66,7 +66,7 @@ subprocess.run(["git", "remote", "add", "origin", repo_url])
 
 print("\nAdding first commit")
 subprocess.run(["git", "add", "."])
-subprocess.run(["git", "commit", "-m", "Initial cookiecutter-template-based commit"])
+subprocess.run(["git", "commit", "-m", "initial cookiecutter-template-based commit"])
 
 if not repo_url:
     print(
