@@ -1,6 +1,12 @@
 name: Keboola Component Build & Deploy Pipeline
-on: [ push ]
-concurrency: ci-${{ github.ref }} # to avoid tag collisions in the ECR
+on:
+  push:  # skip the workflow on the main branch without tags
+    branches-ignore:
+      - main
+    tags:
+      - "*"
+
+concurrency: ci-${{ github.ref }}  # to avoid tag collisions in the ECR
 env:
   # repository variables:
   KBC_DEVELOPERPORTAL_APP: COOKIECUTTER_DEV_PORTAL_VENDOR_NAME.COOKIECUTTER_DEV_PORTAL_COMPONENT_ID
@@ -9,12 +15,12 @@ env:
   KBC_DEVELOPERPORTAL_USERNAME: ${{ vars.KBC_DEVELOPERPORTAL_USERNAME }}
 
   # repository secrets:
-  DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }} # recommended for pushing to ECR
+  DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}  # recommended for pushing to ECR
   KBC_DEVELOPERPORTAL_PASSWORD: ${{ secrets.KBC_DEVELOPERPORTAL_PASSWORD }}
 
-  # (Optional) Test KBC project: https://connection.keboola.com/admin/projects/0000
-  KBC_TEST_PROJECT_CONFIGS: "" # space separated list of config ids
-  KBC_STORAGE_TOKEN: ${{ secrets.KBC_STORAGE_TOKEN }} # required for running KBC tests
+  # (optional) test KBC project: https://connection.keboola.com/admin/projects/0000
+  KBC_TEST_PROJECT_CONFIGS: ""  # space separated list of config ids
+  KBC_STORAGE_TOKEN: ${{ secrets.KBC_STORAGE_TOKEN }}  # required for running KBC tests
 
 jobs:
   push_event_info:
