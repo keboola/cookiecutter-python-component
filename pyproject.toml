@@ -1,0 +1,7 @@
+[project]
+name = "cookiecutter-python-component"
+dynamic = ["version"]
+requires-python = ">=3.13"
+dependencies = [
+    "cookiecutter>=2.6.0",
+]

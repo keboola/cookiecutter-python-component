@@ -5,7 +5,10 @@
   ],
   "repository_url": "",
   "component_name": "Python Component",
-  "repository_folder_name": "{{ cookiecutter.component_name.lower().replace(' ', '_').replace('-', '_') }}",
+  "__normalized_component_name": "{{ cookiecutter.component_name.lower().replace(' ', '-').replace('_', '-') }}",
+  "dev_portal_vendor_name": "keboola",
+  "dev_portal_component_id": "{{ cookiecutter.__normalized_component_name }}",
+  "repository_folder_name": "component-{{ cookiecutter.__normalized_component_name }}",
   "component_short_description": "{{ cookiecutter.component_name }} short description",
   "component_long_description": "{{ cookiecutter.component_name }} long description",
   "_copy_without_render": [
