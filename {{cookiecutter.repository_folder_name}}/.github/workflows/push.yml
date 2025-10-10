@@ -31,12 +31,22 @@ jobs:
       is_semantic_tag: ${{ steps.tag.outputs.is_semantic_tag }}
       is_default_branch: ${{ steps.default_branch.outputs.is_default_branch }}
       is_deploy_ready: ${{ steps.deploy_ready.outputs.is_deploy_ready }}
+      has_tags: ${{ steps.check_tags.outputs.has_tags }}
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
       - name: Fetch all branches from remote repository
         run: git fetch --prune --unshallow --tags -f
+
+      - name: Check if repository has any tags
+        id: check_tags
+        run: |
+          if git describe --tags 2>/dev/null; then
+            echo "has_tags=true" | tee -a $GITHUB_OUTPUT
+          else
+            echo "has_tags=false" | tee -a $GITHUB_OUTPUT
+          fi
 
       - name: Get current branch name
         id: current_branch
@@ -220,7 +230,12 @@ jobs:
       - build
       - push
     runs-on: ubuntu-latest
-    if: needs.push_event_info.outputs.is_deploy_ready == 'true'
+    # Update component when:
+    # 1. No tags exist AND component is not deploy ready (initial setup)
+    # 2. Component is deploy ready (normal deployment)
+    if: |
+      (needs.push_event_info.outputs.has_tags == 'false' && needs.push_event_info.outputs.is_deploy_ready == 'false') ||
+      needs.push_event_info.outputs.is_deploy_ready == 'true'
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
