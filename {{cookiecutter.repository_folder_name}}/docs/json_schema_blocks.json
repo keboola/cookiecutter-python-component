@@ -1,0 +1,451 @@
+{
+  "type": "object",
+  "title": "Configuration Example",
+  "properties": {
+    "credentials-1": {
+      "title": "Authorization",
+      "type": "object",
+      "required": [
+        "username",
+        "#password"
+      ],
+      "propertyOrder": 10,
+      "properties": {
+        "username": {
+          "title": "Username",
+          "type": "string",
+          "propertyOrder": 10,
+          "description": "Your username in SERVICE_NAME that will be used to authorize the component"
+        },
+        "#password": {
+          "title": "Password",
+          "type": "string",
+          "format": "password",
+          "propertyOrder": 20,
+          "description": "Your password in SERVICE_NAME that will be used to authorize the component"
+        }
+      }
+    },
+    "credentials-2": {
+      "title": "Authorization",
+      "type": "object",
+      "required": [
+        "client_id",
+        "#client_secret"
+      ],
+      "propertyOrder": 20,
+      "properties": {
+        "client_id": {
+          "title": "Client ID",
+          "type": "string",
+          "propertyOrder": 10,
+          "description": "Client ID used for login to SERVICE_NAME. Obtained using the steps explained  <a href='https://google.com'>here</a>"
+        },
+        "#client_secret": {
+          "title": "Password",
+          "type": "string",
+          "format": "password",
+          "propertyOrder": 20,
+          "description": "Client Secret used for login to SERVICE_NAME. Obtained using the steps explained  <a href='https://google.com'>here</a>"
+        }
+      }
+    },
+    "credentials-3": {
+      "title": "Authorization",
+      "type": "object",
+      "required": [
+        "#api_token"
+      ],
+      "propertyOrder": 30,
+      "properties": {
+        "#api_token": {
+          "title": "API Token",
+          "type": "string",
+          "format": "password",
+          "propertyOrder": 10,
+          "description": "API Key to Authenticate the connection with SERVICE_NAME. Obtained using the steps explained  <a href='https://google.com'>here</a>"
+        }
+      }
+    },
+    "database": {
+      "title": "Database Credentials",
+      "type": "object",
+      "required": [
+        "host",
+        "port",
+        "user",
+        "#password"
+      ],
+      "propertyOrder": 40,
+      "properties": {
+        "host": {
+          "title": "Host",
+          "type": "string",
+          "propertyOrder": 10,
+          "description": "Database host address"
+        },
+        "port": {
+          "title": "Port",
+          "type": "integer",
+          "propertyOrder": 20,
+          "description": "Port of database"
+        },
+        "user": {
+          "title": "Username",
+          "type": "string",
+          "propertyOrder": 30,
+          "description": "Username for login to database"
+        },
+        "#password": {
+          "title": "Password",
+          "type": "string",
+          "format": "password",
+          "propertyOrder": 40,
+          "description": "Password for login to database"
+        }
+      }
+    },
+    "endpoint": {
+      "title": "Endpoint",
+      "type": "string",
+      "required": true,
+      "enum": [
+        "ENDPOINT A",
+        "ENDPOINT B"
+      ],
+      "propertyOrder": 50,
+      "description": "Endpoint of SERVICE_NAME from which data will be fetched"
+    },
+    "endpoint-2": {
+      "title": "Endpoints",
+      "description": "Endpoints of SERVICE_NAME from which data will be fetched",
+      "type": "array",
+      "format": "select",
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "ENDPOINT A",
+          "ENDPOINT B",
+          "ENDPOINT C"
+        ],
+        "type": "string"
+      },
+      "default": [
+        "ENDPOINT A",
+        "ENDPOINT B"
+      ],
+      "propertyOrder": 60
+    },
+    "use_ssh": {
+      "title": "SSH",
+      "type": "boolean",
+      "propertyOrder": 70,
+      "format": "checkbox",
+      "description": "If checked SSH will be used for connection"
+    },
+    "ssh": {
+      "title": "SSH",
+      "type": "object",
+      "required": [
+        "hostname",
+        "port",
+        "username",
+        "#private_key"
+      ],
+      "options": {
+        "dependencies": {
+          "use_ssh": true
+        }
+      },
+      "propertyOrder": 100,
+      "properties": {
+        "hostname": {
+          "title": "SSH Hostname",
+          "type": "string",
+          "propertyOrder": 10
+        },
+        "port": {
+          "title": "SSH Port",
+          "type": "integer",
+          "propertyOrder": 20,
+          "default": 22
+        },
+        "username": {
+          "title": "SSH Username",
+          "type": "string",
+          "propertyOrder": 30
+        },
+        "#private_key": {
+          "title": "SSH Private Key",
+          "type": "string",
+          "propertyOrder": 40,
+          "description": "Base64 encoded SSH private key"
+        }
+      }
+    },
+    "sync_options": {
+      "type": "object",
+      "title": "Sync Options",
+      "propertyOrder": 200,
+      "properties": {
+        "sync_mode": {
+          "type": "string",
+          "required": true,
+          "title": "Sync Mode",
+          "enum": [
+            "full_sync",
+            "incremental_sync"
+          ],
+          "options": {
+            "enum_titles": [
+              "Full Sync",
+              "Incremental Sync"
+            ]
+          },
+          "default": "full_sync",
+          "description": "Full Sync downloads all data from the source every run, Incremental Sync downloads data created or updated in a specified time range",
+          "propertyOrder": 10
+        },
+        "date_from": {
+          "type": "string",
+          "title": "Date From",
+          "default": "last run",
+          "description": "Date from which data is downloaded. Either date in YYYY-MM-DD format or dateparser string i.e. 5 days ago, 1 month ago, yesterday, etc. You can also set this as last run, which will fetch data from the last run of the component.",
+          "propertyOrder": 20,
+          "options": {
+            "dependencies": {
+              "sync_mode": "incremental_sync"
+            }
+          }
+        },
+        "date_to": {
+          "type": "string",
+          "title": "Date to",
+          "default": "now",
+          "description": "Date to which data is downloaded. Either date in YYYY-MM-DD format or dateparser string i.e. 5 days ago, 1 month ago, now, etc.",
+          "propertyOrder": 30,
+          "options": {
+            "dependencies": {
+              "sync_mode": "incremental_sync"
+            }
+          }
+        }
+      }
+    },
+    "sync_options_with_field": {
+      "type": "object",
+      "title": "Sync Options",
+      "propertyOrder": 300,
+      "properties": {
+        "sync_mode": {
+          "type": "string",
+          "required": true,
+          "title": "Sync Mode",
+          "enum": [
+            "full_sync",
+            "incremental_sync"
+          ],
+          "options": {
+            "enum_titles": [
+              "Full Sync",
+              "Incremental Sync"
+            ]
+          },
+          "default": "full_sync",
+          "description": "Full Sync downloads all data from the source every run, Incremental Sync downloads data created or updated in a specified time range",
+          "propertyOrder": 10
+        },
+        "date_from": {
+          "type": "string",
+          "title": "Date From",
+          "default": "last run",
+          "description": "Date from which data is downloaded. Either date in YYYY-MM-DD format or dateparser string i.e. 5 days ago, 1 month ago, yesterday, etc. You can also set this as last run, which will fetch data from the last run of the component.",
+          "propertyOrder": 20,
+          "options": {
+            "dependencies": {
+              "sync_mode": "incremental_sync"
+            }
+          }
+        },
+        "date_to": {
+          "type": "string",
+          "title": "Date to",
+          "default": "now",
+          "description": "Date to which data is downloaded. Either date in YYYY-MM-DD format or dateparser string i.e. 5 days ago, 1 month ago, now, etc.",
+          "propertyOrder": 30,
+          "options": {
+            "dependencies": {
+              "sync_mode": "incremental_sync"
+            }
+          }
+        },
+        "incremental_field": {
+          "type": "string",
+          "title": "Incremental Field",
+          "default": "LastModified",
+          "description": "Field/column to be used for incremental fetching",
+          "propertyOrder": 40,
+          "options": {
+            "dependencies": {
+              "sync_mode": "incremental_sync"
+            }
+          }
+        }
+      }
+    },
+    "destination": {
+      "title": "Destination",
+      "type": "object",
+      "propertyOrder": 400,
+      "required": [
+        "output_table_name",
+        "load_type"
+      ],
+      "properties": {
+        "output_table_name": {
+          "type": "string",
+          "title": "Storage Table Name",
+          "description": "Name of the table stored in Storage.",
+          "propertyOrder": 10
+        },
+        "load_type": {
+          "type": "string",
+          "enum": [
+            "full_load",
+            "incremental_load"
+          ],
+          "options": {
+            "enum_titles": [
+              "Full Load",
+              "Incremental Load"
+            ]
+          },
+          "default": "full_load",
+          "format": "checkbox",
+          "title": "Load Type",
+          "description": "If Full load is used, the destination table will be overwritten every run. If incremental load is used, data will be upserted into the destination table. Tables with a primary key will have rows updated, tables without a primary key will have rows appended.",
+          "propertyOrder": 20
+        },
+        "primary_keys": {
+          "type": "string",
+          "title": "Primary Keys",
+          "description": "List of primary keys separated by commas e.g. id, other_id. If a primary key is set, updates can be done on the table by selecting incremental loads. The primary key can consist of multiple columns. The primary key of an existing table cannot be changed.",
+          "propertyOrder": 30
+        }
+      }
+    },
+    "report_settings": {
+      "title": "Report Settings",
+      "type": "object",
+      "propertyOrder": 500,
+      "required": [
+        "dimensions",
+        "metrics",
+        "report_type",
+        "date_from",
+        "date_to"
+      ],
+      "properties": {
+        "report_type": {
+          "title": "Report type",
+          "type": "string",
+          "required": true,
+          "enum": [
+            "TYPE 1",
+            "TYPE 2"
+          ],
+          "default": "Object",
+          "propertyOrder": 10,
+          "description": "Select one of the available report types described in the <a href='https://google.com'>documentation</a>"
+        },
+        "dimensions": {
+          "type": "string",
+          "title": "Dimensions",
+          "format": "textarea",
+          "options": {
+            "input_height": "100px"
+          },
+          "description": "Comma separated list of dimensions to use for the report, find supported dimensions for specific report types in the <a href='https://google.com'>documentation</a>",
+          "propertyOrder": 20
+        },
+        "metrics": {
+          "type": "string",
+          "format": "textarea",
+          "options": {
+            "input_height": "100px"
+          },
+          "title": "Metrics",
+          "description": "Comma separated list of metrics to use for the report, find supported dimensions for specific report types in the <a href='https://google.com'>documentation</a>",
+          "propertyOrder": 30
+        },
+        "date_from": {
+          "type": "string",
+          "title": "Date From",
+          "default": "1 week ago",
+          "description": "Start date of the report. Either date in YYYY-MM-DD format or dateparser string i.e. 5 days ago, 1 month ago, yesterday, etc.",
+          "propertyOrder": 40
+        },
+        "date_to": {
+          "type": "string",
+          "title": "Date to",
+          "default": "now",
+          "description": "End date of the report. Either date in YYYY-MM-DD format or dateparser string i.e. 5 days ago, 1 month ago, yesterday, etc.",
+          "propertyOrder": 50
+        }
+      }
+    },
+    "endpoint_with_fields": {
+      "title": "Endpoint settings (Sync Action)",
+      "type": "object",
+      "required": [
+        "endpoint"
+      ],
+      "properties": {
+        "endpoint": {
+          "type": "string",
+          "title": "Endpoint",
+          "description": "Use sync action to get a list of available endpoints.",
+          "propertyOrder": 1,
+          "options": {
+            "async": {
+              "cache": false,
+              "label": "List Endpoints",
+              "action": "listEndpoints",
+              "autoload": []
+            }
+          },
+          "items": {
+            "enum": [],
+            "type": "string"
+          },
+          "enum": []
+        },
+        "field_names": {
+          "type": "array",
+          "format": "select",
+          "title": "Fields (optional)",
+          "description": "List of field names to be downloaded",
+          "propertyOrder": 2,
+          "options": {
+            "async": {
+              "cache": false,
+              "label": "List Fields",
+              "action": "listFields",
+              "autoload": [
+                "parameters.endpoint_with_fields.endpoint"
+              ]
+            }
+          },
+          "items": {
+            "enum": [],
+            "type": "string"
+          },
+          "uniqueItems": true
+        }
+      },
+      "minItems": 1,
+      "uniqueItems": true,
+      "propertyOrder": 600
+    }
+  }
+}
