@@ -1,0 +1,12 @@
+__pycache__/
+.DS_Store
+.idea
+.ruff_cache
+.venv
+.vscode
+*.py[cod]
+*.egg-info
+venv
+
+# kbc datafolder
+data
