@@ -542,7 +542,7 @@ When used in Python, the method does not need to return anything, or it can just
 {
     "test_connection": {
       "type": "button",
-      "format": "sync-action",
+      "format": "test-connection",
       "propertyOrder": 30,
       "options": {
         "async": {
