@@ -309,6 +309,115 @@ echo "  3. Create a tag to trigger deployment: git tag 0.0.1 && git push origin 
 ```
 
 
+## Two-PR Workflow Strategy
+
+When creating a new component, follow this two-phase Pull Request approach for better code review and separation of concerns:
+
+### Phase 1: Base PR (Cookiecutter Kickoff)
+
+**Purpose:** Create the foundational component structure using the cookiecutter template.
+
+**Steps:**
+1. Execute the complete component creation workflow (Steps 1-7 from the script above)
+2. Create a feature branch: `git checkout -b feat/component-kickoff`
+3. Push the cookiecutter-generated code to this branch
+4. Open a Pull Request with title: `feat: kickoff [component-name] component`
+5. PR description should include:
+   - Component ID (full and without vendor prefix)
+   - Component type (extractor/writer/application/other)
+   - Repository URL
+   - Links to Developer Portal registration
+
+**What's included:**
+- Basic component structure (`src/component.py`, `src/configuration.py`)
+- Configuration schemas (`component_config/*.json`)
+- CI/CD workflows (`.github/workflows/`)
+- Docker configuration
+- Sample data and tests
+- Documentation templates
+
+### Phase 2: Custom Implementation PR (Built on Base PR)
+
+**Purpose:** Implement custom logic and features based on user requirements.
+
+**When to create:** Only if the user provides specific implementation requirements beyond the basic kickoff.
+
+**Steps:**
+1. Create a new branch from the base PR branch: `git checkout feat/component-kickoff && git checkout -b feat/custom-implementation`
+2. Implement the custom features requested by the user
+3. Update tests to cover new functionality
+4. Update documentation to reflect custom features
+5. Open a Pull Request with title: `feat: implement [feature-description]`
+6. Set the base branch to `feat/component-kickoff` (not main)
+7. PR description should include:
+   - Summary of implemented features
+   - Changes to component configuration schema
+   - Testing instructions
+   - Any additional dependencies added
+
+**What might be included:**
+- Custom API integrations
+- Data transformation logic
+- Additional configuration parameters
+- Custom validation rules
+- Enhanced error handling
+- Additional output tables/files
+
+### Decision Logic
+
+```bash
+# Pseudo-code for determining PR strategy
+if user_request_contains_only("kickoff", "create component", "initialize"):
+    create_base_pr_only()
+else if user_request_contains("kickoff" AND custom_requirements):
+    create_base_pr()
+    wait_for_review_or_approval()
+    create_custom_implementation_pr()
+else:
+    # User wants direct implementation without separate kickoff PR
+    create_single_comprehensive_pr()
+```
+
+### Example Scenarios
+
+**Scenario 1: Kickoff Only**
+```
+User: "Create a new extractor component called 'my-api-extractor'"
+Action: Create only the base PR with cookiecutter template
+```
+
+**Scenario 2: Kickoff + Custom Implementation**
+```
+User: "Create a new extractor component for the Stripe API that fetches invoices and customers"
+Actions:
+1. Create base PR with cookiecutter template
+2. Create second PR with Stripe API integration, invoice/customer fetching logic, and corresponding configuration schema
+```
+
+**Scenario 3: Direct Implementation (No Kickoff)**
+```
+User: "Add support for pagination to the existing API client"
+Action: Create single PR with the pagination feature (no cookiecutter involved)
+```
+
+### PR Dependencies and Merge Strategy
+
+- **Base PR:** Should be merged to `main` first
+- **Custom Implementation PR:** Can be reviewed in parallel but should only be merged after base PR is in `main`
+- After base PR merge, rebase custom implementation PR onto `main`
+- Use GitHub's branch protection rules to enforce this order
+
+### Best Practices
+
+1. **Keep Base PR Clean:** Don't add custom logic to the base PR. It should only contain cookiecutter-generated code.
+2. **Comprehensive Testing:** Both PRs should include passing tests.
+3. **Documentation:** Update README and component documentation in the appropriate PR.
+4. **Configuration Schema:** If custom implementation requires new config fields, update schemas in the second PR.
+5. **Commit Messages:** Use conventional commit format (`feat:`, `fix:`, `docs:`, etc.)
+6. **Branch Naming:**
+   - Base PR: `feat/component-kickoff` or `feat/init-{component-name}`
+   - Custom PR: `feat/implement-{feature}` or `feat/{component-name}-{feature}`
+
 ## Notes
 
 - Never commit credentials - use environment variables
