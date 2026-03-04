@@ -15,7 +15,7 @@
 
 # KBC Component Python template
 
-Python template for KBC Component creation. Defines the default structure and GitHub/Bitbucket pipeline CI scripts for automatic deployment.
+Python template for KBC Component creation. Defines the default structure and GitHub Actions CI scripts for automatic deployment.
 
 Use as a starting point when creating a new component.
 
@@ -50,8 +50,7 @@ so we can all benefit from it.
 
 ## Example component
 
-This template contains functional example of a [hello-world component](https://bitbucket.org/kds_consulting_team/kbc-python-template/src/master/src/component.py),
-it can be run with [sample configuration](https://bitbucket.org/kds_consulting_team/kbc-python-template/src/master/data/) and it produces valid results.
+This template contains a functional hello-world component example that produces valid results.
 It is advisable to use this structure as a base for new components. Especially the `component.py` module, which should only
 contain the base logic necessary for communication with KBC interface, processing parameters, collecting results
  and calling targeted API service methods.
@@ -62,23 +61,7 @@ contain the base logic necessary for communication with KBC interface, processin
 Clone this repository into a new folder and remove git history
 
 ```bash
-git clone https://bitbucket.org/kds_consulting_team/kbc-python-template.git my-new-component
-cd my-new-component
-rm -rf .git
-git init
-git remote add origin PATH_TO_YOUR_BB_REPO
-git add .
-git commit -m 'initial'
-git push -u origin master
-```
-
-**Method #2:**
-
-Copy the contents of the template folder into your cloned empty repository
-
-```bash
-git clone PATH_TO_YOUR_BB_REPO my-new-component
-# now copy the contents of the template into the my-new-component dir
+git clone PATH_TO_YOUR_REPO my-new-component
 cd my-new-component
 git add .
 git commit -m 'initial'
@@ -87,9 +70,8 @@ git push -u origin master
 
 # Setting up the CI
 
-- GitHub: Check that the [workflows are enabled](https://docs.github.com/en/actions/managing-workflow-runs/disabling-and-enabling-a-workflow).
-    The actions are present in `.github/workflows/` folder.
-- Bitbucket: Enable [pipelines](https://confluence.atlassian.com/bitbucket/get-started-with-bitbucket-pipelines-792298921.html) in the repository.
+- Check that the [workflows are enabled](https://docs.github.com/en/actions/managing-workflow-runs/disabling-and-enabling-a-workflow).
+  The actions are present in `.github/workflows/` folder.
 - Set `KBC_DEVELOPERPORTAL_APP` env variable (dev portal app id)
 
 If not set at the account level, set also other required dev portal env variables:
@@ -187,7 +169,7 @@ If required, change local data folder (the `CUSTOM_FOLDER` placeholder) path to 
 Clone this repository, init the workspace and run the component with following command:
 
 ```
-git clone https://bitbucket.org:kds_consulting_team/kbc-python-template.git my-new-component
+git clone PATH_TO_YOUR_REPO my-new-component
 cd my-new-component
 docker-compose build
 docker-compose run --rm dev
@@ -205,42 +187,7 @@ docker-compose run --rm test
 The preset pipeline scripts contain sections allowing pushing testing image into the ECR repository and automatic
 testing in a dedicated project. These sections are by default commented out.
 
-**Running KBC tests on deploy step, before deployment**
-
-Uncomment following section in the deployment step in `bitbucket-pipelines.yml` file:
-
-```yaml
-            # push test image to ECR - uncomment when initialised
-            # - export REPOSITORY=`docker run --rm -e KBC_DEVELOPERPORTAL_USERNAME -e KBC_DEVELOPERPORTAL_PASSWORD -e KBC_DEVELOPERPORTAL_URL quay.io/keboola/developer-portal-cli-v2:latest ecr:get-repository $KBC_DEVELOPERPORTAL_VENDOR $KBC_DEVELOPERPORTAL_APP`
-            # - docker tag $APP_IMAGE:latest $REPOSITORY:test
-            # - eval $(docker run --rm -e KBC_DEVELOPERPORTAL_USERNAME -e KBC_DEVELOPERPORTAL_PASSWORD -e KBC_DEVELOPERPORTAL_URL quay.io/keboola/developer-portal-cli-v2:latest ecr:get-login $KBC_DEVELOPERPORTAL_VENDOR $KBC_DEVELOPERPORTAL_APP)
-            # - docker push $REPOSITORY:test
-            # - docker run --rm -e KBC_STORAGE_TOKEN quay.io/keboola/syrup-cli:latest run-job $KBC_DEVELOPERPORTAL_APP BASE_KBC_CONFIG test
-            # - docker run --rm -e KBC_STORAGE_TOKEN quay.io/keboola/syrup-cli:latest run-job $KBC_DEVELOPERPORTAL_APP KBC_CONFIG_1 test
-            - ./scripts/update_dev_portal_properties.sh
-            - ./deploy.sh
-```
-
-Make sure that you have `KBC_STORAGE_TOKEN` env. variable set, containing appropriate storage token with access
-to your KBC project. Also make sure to create a functional testing configuration and replace the `BASE_KBC_CONFIG` placeholder with its id.
-
-**Pushing testing image for manual KBC tests**
-
-In some cases you may wish to execute a testing version of your component manually prior to publishing. For instance to test various
-configurations on it. For that it may be convenient to push the `test` image on every push either to master, or any branch.
-
-To achieve that simply uncomment appropriate sections in `bitbucket-pipelines.yml` file, either in the main branch step or in the `default` step.
-
-```yaml
-            # push test image to ecr - uncomment for testing before deployment
-#            - echo 'Pushing test image to repo. [tag=test]'
-#            - export REPOSITORY=`docker run --rm -e KBC_DEVELOPERPORTAL_USERNAME -e KBC_DEVELOPERPORTAL_PASSWORD -e KBC_DEVELOPERPORTAL_URL quay.io/keboola/developer-portal-cli-v2:latest ecr:get-repository $KBC_DEVELOPERPORTAL_VENDOR $KBC_DEVELOPERPORTAL_APP`
-#            - docker tag $APP_IMAGE:latest $REPOSITORY:test
-#            - eval $(docker run --rm -e KBC_DEVELOPERPORTAL_USERNAME -e KBC_DEVELOPERPORTAL_PASSWORD -e KBC_DEVELOPERPORTAL_URL quay.io/keboola/developer-portal-cli-v2:latest ecr:get-login $KBC_DEVELOPERPORTAL_VENDOR $KBC_DEVELOPERPORTAL_APP)
-#            - docker push $REPOSITORY:test
-```
-
- Once the build is finished, you may run such configuration in any KBC project as many times as you want by using [run-job](https://kebooladocker.docs.apiary.io/#reference/run/create-a-job-with-image/run-job) API call, using the `test` image tag.
+The GitHub Actions workflows in `.github/workflows/` handle testing and deployment automatically.
 
 
 # Integration

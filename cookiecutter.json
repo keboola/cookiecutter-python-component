@@ -1,8 +1,5 @@
 {
-  "template_variant": [
-    "GitHub",
-    "Bitbucket"
-  ],
+  "template_variant": "GitHub",
   "repository_url": "",
   "component_name": "Python Component",
   "__normalized_component_name": "{{ cookiecutter.component_name.lower().replace(' ', '-').replace('_', '-') }}",

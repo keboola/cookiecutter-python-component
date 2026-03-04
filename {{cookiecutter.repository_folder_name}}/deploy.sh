@@ -3,18 +3,8 @@ set -e
 
 env
 
-# compatibility with travis and bitbucket
-if [ ! -z ${BITBUCKET_TAG} ]
+if [ ! -z ${GITHUB_TAG} ]
 then
-	echo "assigning bitbucket tag"
-	export TAG="$BITBUCKET_TAG"
-elif [ ! -z ${TRAVIS_TAG} ]
-then
-	echo "assigning travis tag"
-	export TAG="$TRAVIS_TAG"
-elif [ ! -z ${GITHUB_TAG} ]
-then
-	echo "assigning github tag"
 	export TAG="$GITHUB_TAG"
 else
 	echo No Tag is set!
@@ -22,12 +12,6 @@ else
 fi
 
 echo "Tag is '${TAG}'"
-
-#check if deployment is triggered only in master
-if [ ${BITBUCKET_BRANCH} != "master" ]; then
-               echo Deploy on tagged commit can be only executed in master!
-               exit 1
-fi
 
 # Obtain the component repository and log in
 echo "Obtain the component repository and log in"
