@@ -32,8 +32,6 @@ You can use this template with just the [cookiecutter](https://cookiecutter.read
    - `dev_portal_vendor_name` – Vendor name for publishing on Keboola Developer Portal. Default value is `keboola`.
    - `dev_portal_component_id` – Component ID for publishing on Keboola Developer Portal. Defaults to normalized component name.
    - `repository_folder_name` – Name of the destination folder. Defaults to prefixed & normalized component name.
-   - `component_short_description` – Short description that will be pushed to Developer Portal. May be edited in `component_config/component_short_description.md` later.
-   - `component_long_description` – Long description that will be pushed to Developer Portal. May be edited in `component_config/component_long_description.md` later.
 1. Set up CI environment variables (see the [CI Setup section](#ci-setup))
 1. Navigate to newly created folder and run `git push`. The CI pipeline (action) should be now executed. If you add a tag to the commit, component will be pushed to your Developer Portal.
 1. Modify the code in `src/component.py` as you like.

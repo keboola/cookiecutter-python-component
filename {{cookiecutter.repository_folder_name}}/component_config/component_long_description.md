@@ -1,1 +1,1 @@
-{{ cookiecutter.component_long_description }}
+Enter long description of the component here.
