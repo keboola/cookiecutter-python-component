@@ -29,15 +29,11 @@ def modify_portal_properties(repo_url):
         f.write(repo_url + "/blob/master/LICENSE.md")
 
 
-platform = "{{ cookiecutter.template_variant }}"
 repo_url = "{{ cookiecutter.repository_url }}"
 
-if platform == "GitHub":
-    modify_portal_properties(repo_url=repo_url)
+modify_portal_properties(repo_url=repo_url)
 
 REMOVE_PATHS = [
-    '{% if cookiecutter.template_variant == "GitHub" %} bitbucket-pipelines.yml {% endif %}',
-    '{% if cookiecutter.template_variant == "Bitbucket" %} .github {% endif %}',
     "tmp",
 ]
 
