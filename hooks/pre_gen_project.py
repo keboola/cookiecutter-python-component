@@ -18,6 +18,8 @@ if repo_url:
         else:
             logging.error("Failed to get git version")
     except FileNotFoundError:
-        logging.error("Git is not installed! Either install it or leave the repository_url empty")
+        logging.error(
+            "Git is not installed! Either install it or leave the repository_url empty"
+        )
     except Exception as e:
         logging.error(f"An unexpected error occurred: {e!r}")
