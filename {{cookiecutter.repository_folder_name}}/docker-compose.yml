@@ -16,5 +16,4 @@ services:
     environment:
       - KBC_DATADIR=./data
     command:
-      - /bin/sh
-      - /code/scripts/build_n_test.sh
+      - python -m pytest tests/ --tb=short -q

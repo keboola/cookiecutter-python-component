@@ -17,5 +17,6 @@ COPY src/ src
 COPY tests/ tests
 COPY scripts/ scripts
 COPY deploy.sh .
+RUN uv run ruff check src/ tests/
 
 CMD ["python", "-u", "src/component.py"]
