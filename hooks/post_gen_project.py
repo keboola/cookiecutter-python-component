@@ -6,8 +6,8 @@ KDP_COMPID_PLACEHOLDER = "COOKIECUTTER_DEV_PORTAL_COMPONENT_ID"
 KDP_VENDOR_PLACEHOLDER = "COOKIECUTTER_DEV_PORTAL_VENDOR_NAME"
 
 
-def replace_placeholders_in_file(filepath):
-    with open(filepath, "r+") as f:
+def modify_portal_properties(repo_url):
+    with open(".github/workflows/push.yml", "r+") as f:
         lines = f.readlines()
         f.seek(0)
         for line in lines:
@@ -17,11 +17,7 @@ def replace_placeholders_in_file(filepath):
             if KDP_VENDOR_PLACEHOLDER in output:
                 output = output.replace(KDP_VENDOR_PLACEHOLDER, "{{ cookiecutter.dev_portal_vendor_name }}")
             f.write(output)
-        f.truncate()
-
-
-def modify_portal_properties(repo_url):
-    replace_placeholders_in_file(".github/workflows/push.yml")
+        f.truncate()  # truncate the file to remove any leftover content
 
     with open("component_config/sourceCodeUrl.md", "w") as f:
         f.write(repo_url)
