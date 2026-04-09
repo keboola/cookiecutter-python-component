@@ -6,7 +6,8 @@
   "dev_portal_vendor_name": "keboola",
   "dev_portal_component_id": "{{ cookiecutter.__normalized_component_name }}",
   "repository_folder_name": "component-{{ cookiecutter.__normalized_component_name }}",
-"_copy_without_render": [
+  "pipeline_type": ["single", "matrix", "monorepo"],
+  "_copy_without_render": [
     ".github/workflows/*",
     "tmp/*",
     "deploy.sh",
