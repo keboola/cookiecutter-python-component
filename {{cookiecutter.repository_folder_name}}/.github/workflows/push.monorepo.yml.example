@@ -1,0 +1,144 @@
+# Monorepo per-component workflow pattern.
+# Create one copy of this file per component in your monorepo, e.g.:
+#   .github/workflows/ex-component.yml
+#   .github/workflows/wr-component.yml
+# Each workflow triggers only when its component directory changes.
+name: component-name
+on:
+  push:
+    branches: ['**']
+    tags: ['*']
+    paths:
+      - components/component-name/**
+      - .github/workflows/**
+
+concurrency: ci-${{ github.workflow }}-${{ github.ref }}
+
+env:
+  KBC_DEVELOPERPORTAL_APP: COOKIECUTTER_DEV_PORTAL_VENDOR_NAME.component-name
+  KBC_DEVELOPERPORTAL_VENDOR: COOKIECUTTER_DEV_PORTAL_VENDOR_NAME
+  COMPONENT_DIR: ./components/component-name
+  KBC_TEST_PROJECT_CONFIGS: ""
+
+jobs:
+  push_event_info:
+    name: Push Event Info
+    runs-on: ubuntu-latest
+    outputs:
+      app_image_tag: ${{ steps.info.outputs.app_image_tag }}
+      is_deploy_ready: ${{ steps.info.outputs.is_deploy_ready }}
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Get push event info
+        id: info
+        uses: keboola/component-ci/actions/push-event-info@master
+
+  build:
+    name: Docker Image Build
+    runs-on: ubuntu-latest
+    needs: push_event_info
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Build Docker image
+        uses: keboola/component-ci/actions/docker-build@master
+        with:
+          app_id: ${{ env.KBC_DEVELOPERPORTAL_APP }}
+          dockerfile: ${{ env.COMPONENT_DIR }}/Dockerfile
+
+  tests:
+    name: Run Tests
+    runs-on: ubuntu-latest
+    needs:
+      - push_event_info
+      - build
+    steps:
+      - name: Load Docker image
+        uses: keboola/component-ci/actions/docker-load@master
+        with:
+          app_id: ${{ env.KBC_DEVELOPERPORTAL_APP }}
+
+      - name: Run tests
+        uses: keboola/component-ci/actions/run-tests@master
+        with:
+          app_id: ${{ env.KBC_DEVELOPERPORTAL_APP }}
+
+  tests_kbc:
+    name: Run KBC Tests
+    runs-on: ubuntu-latest
+    needs:
+      - push_event_info
+      - build
+    steps:
+      - name: Run KBC tests
+        uses: keboola/component-ci/actions/kbc-tests@master
+        with:
+          app_id: ${{ env.KBC_DEVELOPERPORTAL_APP }}
+          image_tag: ${{ needs.push_event_info.outputs.app_image_tag }}
+          kbc_test_configs: ${{ env.KBC_TEST_PROJECT_CONFIGS }}
+          kbc_storage_token: ${{ secrets.KBC_STORAGE_TOKEN }}
+
+  push:
+    name: Push to ECR
+    runs-on: ubuntu-latest
+    needs:
+      - push_event_info
+      - tests
+      - tests_kbc
+    steps:
+      - name: Load Docker image
+        uses: keboola/component-ci/actions/docker-load@master
+        with:
+          app_id: ${{ env.KBC_DEVELOPERPORTAL_APP }}
+
+      - name: Push to ECR
+        uses: keboola/component-ci/actions/push-to-ecr@master
+        with:
+          app_id: ${{ env.KBC_DEVELOPERPORTAL_APP }}
+          vendor: ${{ env.KBC_DEVELOPERPORTAL_VENDOR }}
+          image_tag: ${{ needs.push_event_info.outputs.app_image_tag }}
+          is_deploy_ready: ${{ needs.push_event_info.outputs.is_deploy_ready }}
+          dockerhub_user: ${{ secrets.DOCKERHUB_USER }}
+          dockerhub_token: ${{ secrets.DOCKERHUB_TOKEN }}
+          kbc_developerportal_username: ${{ vars.KBC_DEVELOPERPORTAL_USERNAME }}
+          kbc_developerportal_password: ${{ secrets.KBC_DEVELOPERPORTAL_PASSWORD }}
+
+  deploy:
+    name: Deploy to KBC
+    runs-on: ubuntu-latest
+    needs:
+      - push_event_info
+      - push
+    if: needs.push_event_info.outputs.is_deploy_ready == 'true'
+    steps:
+      - name: Deploy
+        uses: keboola/component-ci/actions/deploy@master
+        with:
+          app_id: ${{ env.KBC_DEVELOPERPORTAL_APP }}
+          vendor: ${{ env.KBC_DEVELOPERPORTAL_VENDOR }}
+          image_tag: ${{ needs.push_event_info.outputs.app_image_tag }}
+          kbc_developerportal_username: ${{ vars.KBC_DEVELOPERPORTAL_USERNAME }}
+          kbc_developerportal_password: ${{ secrets.KBC_DEVELOPERPORTAL_PASSWORD }}
+
+  update_properties:
+    name: Update Developer Portal Properties
+    runs-on: ubuntu-latest
+    needs:
+      - push_event_info
+      - push
+    if: needs.push_event_info.outputs.is_deploy_ready == 'true'
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Update properties
+        uses: keboola/component-ci/actions/update-properties@master
+        with:
+          app_id: ${{ env.KBC_DEVELOPERPORTAL_APP }}
+          vendor: ${{ env.KBC_DEVELOPERPORTAL_VENDOR }}
+          kbc_developerportal_username: ${{ vars.KBC_DEVELOPERPORTAL_USERNAME }}
+          kbc_developerportal_password: ${{ secrets.KBC_DEVELOPERPORTAL_PASSWORD }}
+          script_path: ${{ env.COMPONENT_DIR }}/scripts/developer_portal/update_properties.sh
