@@ -1,23 +1,18 @@
-# Monorepo per-component workflow pattern.
-# Create one copy of this file per component in your monorepo, e.g.:
-#   .github/workflows/ex-component.yml
-#   .github/workflows/wr-component.yml
-# Each workflow triggers only when its component directory changes.
-name: component-name
+name: COOKIECUTTER_DEV_PORTAL_COMPONENT_ID
 on:
   push:
     branches: ['**']
     tags: ['*']
     paths:
-      - components/component-name/**
+      - components/COOKIECUTTER_DEV_PORTAL_COMPONENT_ID/**
       - .github/workflows/**
 
 concurrency: ci-${{ github.workflow }}-${{ github.ref }}
 
 env:
-  KBC_DEVELOPERPORTAL_APP: COOKIECUTTER_DEV_PORTAL_VENDOR_NAME.component-name
+  KBC_DEVELOPERPORTAL_APP: COOKIECUTTER_DEV_PORTAL_VENDOR_NAME.COOKIECUTTER_DEV_PORTAL_COMPONENT_ID
   KBC_DEVELOPERPORTAL_VENDOR: COOKIECUTTER_DEV_PORTAL_VENDOR_NAME
-  COMPONENT_DIR: ./components/component-name
+  COMPONENT_DIR: ./components/COOKIECUTTER_DEV_PORTAL_COMPONENT_ID
   KBC_TEST_PROJECT_CONFIGS: ""
 
 jobs:

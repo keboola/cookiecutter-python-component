@@ -21,9 +21,9 @@ def replace_placeholders_in_file(filepath):
 
 
 PIPELINE_TEMPLATES = {
-    "single": "push.yml",
-    "matrix": "push.matrix.yml.example",
-    "monorepo": "push.monorepo.yml.example",
+    "single": "push-single.yml",
+    "matrix": "push-matrix.yml",
+    "monorepo": "push-monorepo.yml",
 }
 
 
@@ -33,17 +33,15 @@ def setup_pipeline_workflow():
     pipeline_type = "{{ cookiecutter.pipeline_type }}"
     selected = PIPELINE_TEMPLATES[pipeline_type]
 
-    # If not the default, rename the selected template to push.yml
-    if selected != "push.yml":
-        os.replace(
-            os.path.join(workflows_dir, selected),
-            os.path.join(workflows_dir, "push.yml"),
-        )
+    os.replace(
+        os.path.join(workflows_dir, selected),
+        os.path.join(workflows_dir, "push.yml"),
+    )
 
-    # Remove leftover example files
-    for filename in os.listdir(workflows_dir):
-        if filename.endswith(".yml.example"):
-            os.remove(os.path.join(workflows_dir, filename))
+    for filename in list(PIPELINE_TEMPLATES.values()):
+        filepath = os.path.join(workflows_dir, filename)
+        if os.path.exists(filepath):
+            os.remove(filepath)
 
 
 def modify_portal_properties(repo_url):

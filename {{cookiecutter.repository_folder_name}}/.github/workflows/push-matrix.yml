@@ -1,7 +1,3 @@
-# One-image-to-many-components pattern.
-# Use when a single Docker image is pushed under multiple component IDs.
-# Replace push.yml with this file (rename to push.yml) and customize the
-# matrix lists with your actual component IDs.
 name: Keboola Component Build & Deploy Pipeline
 on: [push]
 concurrency: ci-${{ github.ref }}
@@ -81,7 +77,6 @@ jobs:
     strategy:
       matrix:
         app_id:
-          # TODO: list all component IDs this image should be pushed as
           - COOKIECUTTER_DEV_PORTAL_VENDOR_NAME.component-1
           - COOKIECUTTER_DEV_PORTAL_VENDOR_NAME.component-2
     steps:
@@ -113,7 +108,6 @@ jobs:
     strategy:
       matrix:
         app_id:
-          # TODO: same list as push matrix above
           - COOKIECUTTER_DEV_PORTAL_VENDOR_NAME.component-1
           - COOKIECUTTER_DEV_PORTAL_VENDOR_NAME.component-2
     steps:
@@ -136,7 +130,6 @@ jobs:
     strategy:
       matrix:
         app_id:
-          # TODO: same list as push matrix above
           - COOKIECUTTER_DEV_PORTAL_VENDOR_NAME.component-1
           - COOKIECUTTER_DEV_PORTAL_VENDOR_NAME.component-2
     steps:

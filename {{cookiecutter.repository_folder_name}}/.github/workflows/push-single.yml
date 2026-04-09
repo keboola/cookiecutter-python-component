@@ -14,7 +14,4 @@ jobs:
     with:
       app_id: COOKIECUTTER_DEV_PORTAL_VENDOR_NAME.COOKIECUTTER_DEV_PORTAL_COMPONENT_ID
       vendor: COOKIECUTTER_DEV_PORTAL_VENDOR_NAME
-      # For multi-stage Docker builds, uncomment:
-      # test_build_target: test
-      # docker_build_target: production
     secrets: inherit
