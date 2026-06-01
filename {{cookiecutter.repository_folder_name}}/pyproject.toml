@@ -2,7 +2,7 @@
 name = "{{ cookiecutter.__normalized_component_name }}"
 dynamic = ["version"]
 readme = "README.md"
-requires-python = "~=3.13"
+requires-python = "~=3.14.0"
 dependencies = [
     "freezegun>=1.5.1",
     "keboola-component>=1.9.0",
@@ -21,7 +21,7 @@ dev = [
 
 [tool.ruff]
 line-length = 120
-target-version = "py313"
+target-version = "py314"
 
 [tool.ruff.lint]
-extend-select = ["I"]
+extend-select = ["I", "UP", "G"]

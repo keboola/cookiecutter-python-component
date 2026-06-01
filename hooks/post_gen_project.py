@@ -58,7 +58,14 @@ subprocess.run(["git", "init", "-b", "main"])
 
 if repo_url:
     print(f"\nSetting up remote to {repo_url}")
-subprocess.run(["git", "remote", "add", "origin", repo_url])
+    subprocess.run(["git", "remote", "add", "origin", repo_url])
+
+# Generate uv.lock so the initial commit is buildable (Dockerfile uses --frozen)
+print("\nGenerating uv.lock")
+result = subprocess.run(["uv", "lock"], capture_output=True, text=True)
+if result.returncode != 0:
+    print(f"Command failed with error: {result.stderr}")
+    exit(1)
 
 print("\nAdding first commit")
 subprocess.run(["git", "add", "."])
