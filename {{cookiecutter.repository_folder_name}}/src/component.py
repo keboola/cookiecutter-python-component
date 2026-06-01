@@ -43,7 +43,7 @@ class Component(ComponentBase):
         # get input table definitions
         input_tables = self.get_input_tables_definitions()
         for table in input_tables:
-            logging.info(f"Received input table: {table.name} with path: {table.full_path}")
+            logging.info("Received input table: %s with path: %s", table.name, table.full_path)
 
         if len(input_tables) == 0:
             raise UserException("No input tables found")
@@ -62,8 +62,8 @@ class Component(ComponentBase):
         # Add timestamp column and save into out_table_path
         input_table = input_tables[0]
         with (
-            open(input_table.full_path, "r") as inp_file,
-            open(table.full_path, mode="wt", encoding="utf-8", newline="") as out_file,
+            open(input_table.full_path) as inp_file,
+            open(table.full_path, mode="w", encoding="utf-8", newline="") as out_file,
         ):
             reader = csv.DictReader(inp_file)
 

@@ -1,7 +1,7 @@
 import os
 import unittest
+from unittest import mock
 
-import mock
 from freezegun import freeze_time
 
 from component import Component
