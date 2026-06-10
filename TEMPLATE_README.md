@@ -107,6 +107,9 @@ Currently these Dev Portal configuration parameters are supported:
  - `configRowSchema.json`
  - `component_short_description.md`
  - `component_long_description.md`
+ - `uiOptions.md`
+
+`uiOptions.md` controls which configuration UI the platform renders. It ships with `["genericDockerUI"]` so the standard config form shows up on first deploy. For a row-based component add `"genericDockerUI-rows"`, and for an OAuth component add `"genericDockerUI-authorization"`.
 
 The choice to include this script directly in the main branch was made to simplify ad-hoc changes of the component configuration parameters. For instance, if you wish to slightly modify the configuration schema without affecting the code itself, it is possible to simply push the changes directly into the master and these will be automatically propagated to the production without rebuilding the image itself. Solely Developer Portal configuration metadata is deployed at this stage.
 
