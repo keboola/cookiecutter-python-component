@@ -4,8 +4,7 @@ dynamic = ["version"]
 readme = "README.md"
 requires-python = "~=3.14.0"
 dependencies = [
-    "freezegun>=1.5.1",
-    "keboola-component>=1.9.0",
+    "keboola-component>=1.10.0",
     "keboola-http-client>=1.0.1",
     "keboola-utils>=1.1.0",
     "pydantic>=2.11.7",
@@ -13,14 +12,28 @@ dependencies = [
 
 [dependency-groups]
 dev = [
-    "keboola.datadirtest>=2.0.0",
+    "freezegun>=1.5.1",
+    "keboola.datadirtest>=2.2.0",
+    "mock>=5.2.0",
+    "pre-commit>=4.5.0",
     "pytest>=9.0.2",
     "ruff>=0.15.2",
+    "ty>=0.0.24",
 ]
 
 [tool.ruff]
 line-length = 120
-target-version = "py314"
 
 [tool.ruff.lint]
-extend-select = ["I", "UP", "G"]
+extend-select = [
+    "I",   # isort – import sorting
+    "UP",  # pyupgrade – modern Python syntax
+    "G",   # flake8-logging-format – no f-strings / str.format in logging calls
+]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+
+[tool.ty.environment]
+extra-paths = ["src"]
