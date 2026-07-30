@@ -3,6 +3,8 @@ import logging
 from keboola.component.exceptions import UserException
 from pydantic import BaseModel, Field, ValidationError, field_validator
 
+logger = logging.getLogger(__name__)
+
 
 class Configuration(BaseModel):
     print_hello: bool
@@ -17,7 +19,7 @@ class Configuration(BaseModel):
             raise UserException(f"Validation Error: {', '.join(error_messages)}")
 
         if self.debug:
-            logging.debug("Component will run in Debug mode")
+            logger.debug("Component will run in Debug mode")
 
     @field_validator("api_token")
     def token_must_be_uppercase(cls, v):
